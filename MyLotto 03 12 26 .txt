@@ -4109,8 +4109,8 @@ $methodKeys = ['skip_hit','ai_prediction','mcmc_prediction','skai_prediction','h
   box-shadow:0 0 0 1px rgba(15,118,110,.25);
 }
 .decision-pill-overlap{
-  background:#1d4ed8;
-  border-color:#1e40af;
+  background:#15803d;
+  border-color:#166534;
   color:#ffffff;
 }
 .decision-pill-empty{
@@ -4191,8 +4191,8 @@ $methodKeys = ['skip_hit','ai_prediction','mcmc_prediction','skai_prediction','h
   padding:0.18rem 0.6rem;
   margin:0.12rem 0.18rem 0.12rem 0;
 
-  background:#1C66FF;           /* SKAI Blue */
-  border:1px solid rgba(28,102,255,0.35);
+  background:#15803d;           /* darker green overlap signal */
+  border:1px solid rgba(21,128,61,0.4);
   color:#fff;
   font-weight:700;
   font-size:0.92rem;
@@ -4224,8 +4224,8 @@ $methodKeys = ['skip_hit','ai_prediction','mcmc_prediction','skai_prediction','h
 
 /* Base grid pills (unselected): calm, readable */
 .prediction-panel .le-pick-pill.common-highlight{
-  background:#EFF6FF;              /* very light blue tint */
-  border:1px solid #BFDBFE;        /* light outline */
+  background:#f0fdf4;              /* very light green tint */
+  border:1px solid #bbf7d0;        /* light green outline */
   color:#0A1A33;                   /* Deep Navy */
   box-shadow:none;
   transition:transform .08s ease, box-shadow .12s ease, background .12s ease, border-color .12s ease, color .12s ease;
@@ -4233,11 +4233,11 @@ $methodKeys = ['skip_hit','ai_prediction','mcmc_prediction','skai_prediction','h
 
 /* Hover/focus affordance for accessibility */
 .prediction-panel .le-pick-pill.common-highlight:hover{
-  border-color:#60A5FA;
+  border-color:#4ade80;
   box-shadow:0 1px 4px rgba(10,26,51,.10);
 }
 .prediction-panel .le-pick-pill.common-highlight:focus{
-  outline:3px solid rgba(28,102,255,.35); /* SKAI Blue ring */
+  outline:3px solid rgba(22,163,74,.35); /* green ring */
   outline-offset:2px;
 }
 
@@ -4262,7 +4262,7 @@ $methodKeys = ['skip_hit','ai_prediction','mcmc_prediction','skai_prediction','h
 /* Selected chips in the “Decision pool” display should also be obvious */
 .prediction-panel .le-pick-selected.le-is-selected,
 .prediction-panel .le-pick-selected.common-highlight{
-  background:#1C66FF !important;
+  background:#15803d !important;
   border:1px solid #0A1A33 !important;
   color:#FFFFFF !important;
   box-shadow:0 6px 14px rgba(10,26,51,.16);
@@ -4652,8 +4652,8 @@ $methodKeys = ['skip_hit','ai_prediction','mcmc_prediction','skai_prediction','h
   border-radius:999px;
   font-size:0.82rem;
   font-weight:800;
-  background:#1d4ed8;              /* strong overlap signal */
-  border:1px solid #1e40af;
+  background:#15803d;              /* darker green overlap signal */
+  border:1px solid #166534;
   color:#ffffff;
 }
 
@@ -4711,9 +4711,9 @@ $methodKeys = ['skip_hit','ai_prediction','mcmc_prediction','skai_prediction','h
 /* Drawn + overlap “super hit” */
 .prediction-panel .drawn-match{
   background:#111827 !important;
-  border-color:#1d4ed8 !important;
+  border-color:#166534 !important;
   color:#f9fafb !important;
-  box-shadow:0 0 0 2px rgba(37,99,235,0.5);
+  box-shadow:0 0 0 2px rgba(22,163,74,0.5);
 }
 
 /* Placeholder card styling */
