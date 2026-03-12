@@ -472,7 +472,7 @@ echo '{loadmoduleid 126}';
 
   [[/div]]
 [[/div]]
-
+[[/div]]
 [[style]]
 /* Compact variant - mapped to SKAI card */
 .info-card.compact { padding: 0.75rem; }
@@ -2053,7 +2053,7 @@ h3.title { font-size: 1.5rem; }
 .wheeling-card .card-header{ padding-bottom:.75rem; border-bottom:1px solid #e0e0e5; margin-bottom:1rem; }
 
 /* Legend */
-.legend-card{ padding:10; border:none; box-shadow:none; margin-bottom:1rem; }
+.legend-card{ padding:10px; border:none; box-shadow:none; margin-bottom:1rem; }
 .legend-card .card-header{ background:transparent; border-bottom:none; padding:.5rem 1rem; }
 .legend-container{ display:flex; gap:1rem; padding:.5rem 1rem; }
 .legend-box{ position:relative; padding-left:1.6rem; font-weight:600; }
@@ -3346,7 +3346,7 @@ foreach ($bestOpps as $__sopp) {
   [[div class="prc-section" id="<?php echo $__prcSectionId; ?>"]]
     [[div class="prc-header" onclick="skaiPrcToggle('<?php echo $__prcSectionId; ?>')" role="button" tabindex="0"
           aria-expanded="true" aria-controls="<?php echo $__prcSectionId; ?>-body"
-          onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();skaiPrcToggle('<?php echo $__prcSectionId; ?>')}]]
+          onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();skaiPrcToggle('<?php echo $__prcSectionId; ?>');}"]]
 
       [[div class="prc-header-left"]]
         [[h3 class="prc-title"]]<?php echo $__prcLotName; ?><?php echo $__prcState ? ' &ndash; ' . $__prcState : ''; ?>[[/h3]]
@@ -3707,7 +3707,7 @@ foreach ($bestOpps as $__sopp) {
          role="button" tabindex="0"
          aria-expanded="true"
          aria-controls="<?php echo $__laSecId; ?>-body"
-         onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();skaiLraToggle('<?php echo $__laSecId; ?>')}"]]
+         onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();skaiLraToggle('<?php echo $__laSecId; ?>');}"]]
       [[div style="display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;gap:6px;"]]
         [[h3 class="lra-title"]]<?php echo $__laName; ?><?php echo $__laState ? ' &ndash; ' . $__laState : ''; ?>[[/h3]]
         [[span class="lra-badge"]]<?php echo $__laTotal; ?> run<?php echo $__laTotal !== 1 ? 's' : ''; ?>[[/span]]
