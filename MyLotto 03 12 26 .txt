@@ -1512,7 +1512,7 @@ foreach ($savedSets as $__s) {
     $__src = (string)$__s->source;
     $__baseLabel = $__methodLabels[$__src] ?? ucwords(str_replace('_', ' ', $__src));
     $__modeStr = '';
-    if ($__src === 'skai_prediction' && !empty($__s->skai_run_mode)) {
+    if (!empty($__s->skai_run_mode)) {
         $__modeStr = ucwords(str_replace('_', ' ', (string)$__s->skai_run_mode));
     }
     $__runDispInfo[$__rid] = array(
@@ -3598,23 +3598,52 @@ $methodKeys = ['skip_hit','ai_prediction','mcmc_prediction','skai_prediction','h
           return $pos;
         };
 
-        // Crunch stats — ONE run per method (first occurrence), matching the
-        // JS autoSelectOnePerMethod() default so the heatmap and the compare-
-        // checkboxes always agree on what is displayed.
-        $__heatmapProcessedMethods = array(); // tracks which methods have already been counted
+        // Crunch stats — use the BEST run per method (most total hits → lowest
+        // pos_sum tiebreak → highest run_id) so the heatmap reflects the
+        // prediction that performed best, not merely the first saved run.
+
+        // Pass 1: identify best run per method
+        $__heatmapBestRun = array();
         foreach ($g['preds'] as $__run) {
-          $src   = $__run->source;
-          if (!in_array($src,$methodKeys,true)) { $src = 'skip_hit'; }
+          $src = $__run->source;
+          if (!in_array($src, $methodKeys, true)) { $src = 'skip_hit'; }
 
-          // Skip subsequent runs for the same method — only the first/earliest counts
-          if (isset($__heatmapProcessedMethods[$src])) { continue; }
-          $__heatmapProcessedMethods[$src] = true;
-
-          $hitsByMethod[$src]['runs']++;
-
-          // Build position maps for this run
           $posMain  = $toPositions((string)($__run->main_numbers ?? ''), $__maxRankMain);
           $posExtra = $toPositions((string)($__run->extra_ball_numbers ?? ''), $__maxRankExtra);
+
+          // Score this run against the actual draw
+          $__rmh = 0; $__reh = 0; $__rps = 0;
+          foreach ($__drawMain  as $__dh) { if (isset($posMain[$__dh]))  { $__rmh++; $__rps += $posMain[$__dh]; } }
+          foreach ($__drawExtra as $__de) { if (isset($posExtra[$__de])) { $__reh++; } }
+          $__rTotal = $__rmh + $__reh;
+          $__runId  = (int)$__run->id;
+
+          $__ex = $__heatmapBestRun[$src] ?? null;
+          // Priority: 1) most total hits (main+extra), 2) lowest pos_sum
+          // (matched numbers appear earlier in the ranked list = better),
+          // 3) highest run_id (most recent save wins the tiebreak).
+          $__better = ($__ex === null)
+            || ($__rTotal > $__ex['totalHits'])
+            || ($__rTotal === $__ex['totalHits'] && $__rps < $__ex['posSum'])
+            || ($__rTotal === $__ex['totalHits'] && $__rps === $__ex['posSum'] && $__runId > $__ex['runId']);
+          if ($__better) {
+            $__heatmapBestRun[$src] = [
+              'run'       => $__run,
+              'posMain'   => $posMain,
+              'posExtra'  => $posExtra,
+              'totalHits' => $__rTotal,
+              'posSum'    => $__rps,
+              'runId'     => $__runId,
+            ];
+          }
+        }
+
+        // Pass 2: accumulate placement stats using only the best run per method
+        foreach ($__heatmapBestRun as $src => $__hbr) {
+          $posMain  = $__hbr['posMain'];
+          $posExtra = $__hbr['posExtra'];
+
+          $hitsByMethod[$src]['runs']++;
 
           // Compare to actual draw mains (only meaningful if post mode)
           foreach ($__drawMain as $__hit) {
@@ -3732,6 +3761,7 @@ $methodKeys = ['skip_hit','ai_prediction','mcmc_prediction','skai_prediction','h
 .run-hits{ text-align:center; font-weight:600; color:#6b7280; }
 .run-has-hits{ color:#15803d; font-weight:800; }
 .run-ts{ font-size:0.78rem; color:#6b7280; white-space:nowrap; }
+.run-mode-label{ display:block; font-size:0.75rem; color:#475569; font-weight:500; margin-top:2px; }
 /* Live single-run heatmap reveal */
 .run-live-heatmap-wrap{
   margin-top:1rem; padding:0.85rem 1rem;
@@ -7885,10 +7915,16 @@ $methodKeys = ['skip_hit','ai_prediction','mcmc_prediction','skai_prediction','h
     $__rMainHits = 0; $__rExtraHits = 0;
     foreach ($__drawMain  as $dh) { if (isset($__rPosMain[$dh]))  { $r=$__rPosMain[$dh];  if ($r>=1&&$__maxRankMain>=$r)  { $__rMainData[$r]++;  $__rMainHits++;  } } }
     foreach ($__drawExtra as $de) { if (isset($__rPosExtra[$de])) { $r=$__rPosExtra[$de]; if ($r>=1&&$__maxRankExtra>=$r) { $__rExtraData[$r]++; $__rExtraHits++; } } }
+    // Mode / role label for this run (from skai_run_mode, which is stored for all method types)
+    $__rMode = '';
+    if (!empty($__pr->skai_run_mode)) {
+      $__rMode = ucwords(str_replace('_', ' ', (string)$__pr->skai_run_mode));
+    }
     $__runList[] = [
       'id'        => (int)$__pr->id,
       'source'    => $__src,
       'label'     => $labelShort[$__src] ?? $__src,
+      'mode'      => $__rMode,
       'ts'        => (string)($__pr->generated_at ?: $__pr->date_saved),
       'mainNums'  => $__rMainNums,
       'extraNums' => $__rExtraNums,
@@ -7946,7 +7982,9 @@ $methodKeys = ['skip_hit','ai_prediction','mcmc_prediction','skai_prediction','h
             [[/td]]
             [[td]][[span class="run-method-badge run-src-<?php echo htmlspecialchars(str_replace('_','-',$__rr['source']),ENT_QUOTES); ?>"]]
               <?php echo htmlspecialchars($__rr['label'], ENT_QUOTES); ?>
-            [[/span]][[/td]]
+            [[/span]]<?php if (!empty($__rr['mode'])): ?>
+              [[span class="run-mode-label"]]<?php echo htmlspecialchars($__rr['mode'], ENT_QUOTES); ?>[[/span]]
+            <?php endif; ?>[[/td]]
             [[td class="run-ts"]]<?php echo htmlspecialchars($__rr['ts'], ENT_QUOTES); ?>[[/td]]
             [[td class="run-numbers"]]<?php
               foreach ($__rr['mainNums'] as $__n) {
