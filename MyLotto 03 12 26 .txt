@@ -1626,8 +1626,13 @@ foreach ($groups as $__gKey => $__g) {
                 if ($__fn !== 0 && in_array($__fn, $__grpDraw['drawMain'], true)) { $__fbMainHits++; }
             }
             $__fbExtraHits = 0;
-            if ($__predExtra > 0 && !empty($__grpDraw['drawExtra']) && in_array($__predExtra, $__grpDraw['drawExtra'], true)) {
-                $__fbExtraHits = 1;
+            if (!empty($__predExtraAll) && !empty($__grpDraw['drawExtra'])) {
+                foreach ($__predExtraAll as $__pev) {
+                    if ($__pev > 0 && in_array($__pev, $__grpDraw['drawExtra'], true)) {
+                        $__fbExtraHits = 1;
+                        break;
+                    }
+                }
             }
             $__scored = array(
                 'run_id'       => $__rid,
@@ -3403,6 +3408,14 @@ foreach ($bestOpps as $__sopp) {
     [[/form]]
   [[/div]]
 
+[[/div]]
+
+[[div style="display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;gap:8px;margin:0 0 10px 0;"]]
+  [[button type="button" id="mle-lottery-toggle-all-btn" class="btn-secondary"
+           style="padding:0.35rem 0.75rem;font-size:0.8rem;white-space:nowrap;"
+           onclick="skaiLotteryToggleAll(this)"]]
+    &#x25BC; Collapse All
+  [[/button]]
 [[/div]]
 
 <?php foreach ($groups as $g):
@@ -10560,6 +10573,18 @@ function initLotteryCollapse() {
 // Initialize lottery collapse functionality
 initLotteryCollapse();
 
+// Set the initial label of the "Collapse All / Expand All" global button.
+(function() {
+  var allBtn = document.getElementById('mle-lottery-toggle-all-btn');
+  if (!allBtn) { return; }
+  var groups = document.querySelectorAll('.lottery-group');
+  var anyExpanded = false;
+  for (var i = 0; i < groups.length; i++) {
+    if (!groups[i].classList.contains('collapsed')) { anyExpanded = true; break; }
+  }
+  allBtn.textContent = anyExpanded ? '\u25bc Collapse All' : '\u25b6 Expand All';
+}());
+
 // Restore Prediction Results section collapse state from localStorage.
 (function() {
   Array.prototype.forEach.call(document.querySelectorAll('.prc-section'), function(sec) {
@@ -11153,6 +11178,46 @@ function skaiLotteryToggle(btn) {
     btn.setAttribute('aria-expanded', 'false');
     btn.setAttribute('aria-label', 'Expand lottery section');
     if (storageKey) { try { localStorage.setItem(storageKey, 'true'); } catch(e) {} }
+  }
+}
+
+// ============================================================
+// skaiLotteryToggleAll: Collapse / expand ALL lottery-group sections.
+// Updates each group's localStorage key and syncs per-group toggle buttons.
+// ES5-compatible; no dependencies.
+// ============================================================
+function skaiLotteryToggleAll(btn) {
+  var groups = document.querySelectorAll('.lottery-group');
+  var shouldCollapse = false;
+  for (var i = 0; i < groups.length; i++) {
+    if (!groups[i].classList.contains('collapsed')) { shouldCollapse = true; break; }
+  }
+  for (var j = 0; j < groups.length; j++) {
+    var group      = groups[j];
+    var toggle     = group.querySelector('.lottery-collapse-toggle');
+    var lotteryId  = group.getAttribute('data-lottery-id') || '';
+    var baseLid    = lotteryId ? lotteryId.split('-')[0] : '';
+    var storageKey = baseLid ? ('lottery_collapsed_' + baseLid) : '';
+    if (shouldCollapse) {
+      group.classList.add('collapsed');
+      if (toggle) {
+        toggle.textContent = '\u25b6 Expand';
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-label', 'Expand lottery section');
+      }
+      if (storageKey) { try { localStorage.setItem(storageKey, 'true'); } catch(e) {} }
+    } else {
+      group.classList.remove('collapsed');
+      if (toggle) {
+        toggle.textContent = '\u25bc Collapse';
+        toggle.setAttribute('aria-expanded', 'true');
+        toggle.setAttribute('aria-label', 'Collapse lottery section');
+      }
+      if (storageKey) { try { localStorage.setItem(storageKey, 'false'); } catch(e) {} }
+    }
+  }
+  if (btn) {
+    btn.textContent = shouldCollapse ? '\u25b6 Expand All' : '\u25bc Collapse All';
   }
 }
 
