@@ -3148,7 +3148,7 @@ foreach ($bestOpps as $__sopp) {
 .prc-legend-best { background: #fefce8; border-color: #facc15; color: #713f12; }
 
 /* ============================================================
-   Lottery Run Analysis (LRA) — cross-run summary section
+   Lottery Run Analysis (LRA) -- cross-run summary section
    ============================================================ */
 .lra-wrap {
   margin: 0 0 1.5rem 0;
@@ -3696,8 +3696,6 @@ foreach ($bestOpps as $__sopp) {
       foreach ($__laSrcStats as $__laStat) {
           if ((int)$__laStat['hits'] > $__laMaxSrcHits) { $__laMaxSrcHits = (int)$__laStat['hits']; }
       }
-      // Max number frequency (for pill display)
-      $__laMaxFreq = !empty($__laTopNums) ? (int)reset($__laTopNums) : 1;
   ?>
   [[div class="lra-section" id="<?php echo $__laSecId; ?>"]]
     [[div class="lra-header"
