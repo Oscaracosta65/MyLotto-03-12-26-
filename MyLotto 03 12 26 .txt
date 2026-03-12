@@ -4211,7 +4211,7 @@ $methodKeys = ['skip_hit','ai_prediction','mcmc_prediction','skai_prediction','h
   font-size:0.85rem;
   color:#374151;
 }
-/* Overlap highlight (SKAI/LottoExpert pill) */
+/* Overlap highlight (SKAI/LottoExpert pill) — blue = in 2+ methods but NOT drawn */
 .common-highlight{
   display:inline-flex;
   align-items:center;
@@ -4221,8 +4221,8 @@ $methodKeys = ['skip_hit','ai_prediction','mcmc_prediction','skai_prediction','h
   padding:0.18rem 0.6rem;
   margin:0.12rem 0.18rem 0.12rem 0;
 
-  background:#15803d;           /* darker green overlap signal */
-  border:1px solid rgba(21,128,61,0.4);
+  background:#1d4ed8;           /* blue: overlap signal (not drawn) */
+  border:1px solid rgba(29,78,216,0.4);
   color:#fff;
   font-weight:700;
   font-size:0.92rem;
@@ -4254,20 +4254,20 @@ $methodKeys = ['skip_hit','ai_prediction','mcmc_prediction','skai_prediction','h
 
 /* Base grid pills (unselected): calm, readable */
 .prediction-panel .le-pick-pill.common-highlight{
-  background:#f0fdf4;              /* very light green tint */
-  border:1px solid #bbf7d0;        /* light green outline */
-  color:#0A1A33;                   /* Deep Navy */
+  background:#eff6ff;              /* light blue tint — overlap signal */
+  border:1px solid #bfdbfe;        /* blue outline */
+  color:#1e3a8a;                   /* dark blue text */
   box-shadow:none;
   transition:transform .08s ease, box-shadow .12s ease, background .12s ease, border-color .12s ease, color .12s ease;
 }
 
 /* Hover/focus affordance for accessibility */
 .prediction-panel .le-pick-pill.common-highlight:hover{
-  border-color:#4ade80;
+  border-color:#3b82f6;
   box-shadow:0 1px 4px rgba(10,26,51,.10);
 }
 .prediction-panel .le-pick-pill.common-highlight:focus{
-  outline:3px solid rgba(22,163,74,.35); /* green ring */
+  outline:3px solid rgba(29,78,216,.35); /* blue ring */
   outline-offset:2px;
 }
 
@@ -4672,7 +4672,7 @@ $methodKeys = ['skip_hit','ai_prediction','mcmc_prediction','skai_prediction','h
   color:#14532d;
 }
 
-/* Common overlap highlight (not drawn) — used ONLY for overlap/agreements, not the manual grid */
+/* Common overlap highlight (not drawn) — blue = appears in 2+ methods but was NOT drawn */
 .prediction-panel .common-highlight{
   display:inline-flex;
   align-items:center;
@@ -4682,8 +4682,8 @@ $methodKeys = ['skip_hit','ai_prediction','mcmc_prediction','skai_prediction','h
   border-radius:999px;
   font-size:0.82rem;
   font-weight:800;
-  background:#15803d;              /* darker green overlap signal */
-  border:1px solid #166534;
+  background:#1d4ed8;              /* blue: overlap signal (not drawn) */
+  border:1px solid #1e40af;
   color:#ffffff;
 }
 
@@ -4738,11 +4738,11 @@ $methodKeys = ['skip_hit','ai_prediction','mcmc_prediction','skai_prediction','h
   transform:translateY(-1px);
 }
 
-/* Drawn + overlap “super hit” */
+/* Drawn + overlap “super hit” — dark green: drawn AND in 2+ methods */
 .prediction-panel .drawn-match{
-  background:#111827 !important;
+  background:#15803d !important;
   border-color:#166534 !important;
-  color:#f9fafb !important;
+  color:#ffffff !important;
   box-shadow:0 0 0 2px rgba(22,163,74,0.5);
 }
 
