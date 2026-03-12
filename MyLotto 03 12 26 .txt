@@ -9196,9 +9196,14 @@ if (!drawnMain.length) {
       function renderPill(n, isDrawn, isExtra) {
         // Clickable pill: feeds Decision Set.
         // NOTE: no backticks; Sorcerer-safe output.
+        // - Drawn/hit numbers always use drawn-pill styling.
+        // - In multi-method comparison (2+ selected), non-drawn numbers use
+        //   common-highlight to signal "this number appears in multiple methods".
+        // - In single-method view, non-drawn numbers use a neutral le-pick-pill
+        //   — there is no real overlap with only one prediction.
         var cls = isDrawn
           ? (isExtra ? 'drawn-pill extra' : 'drawn-pill')
-          : 'common-highlight';
+          : (checked.length >= 2 ? 'common-highlight' : 'le-pick-pill');
 
         // Add a stable hook + data for selection.
         // data-role="pick" keeps delegation simple and fast.
@@ -9694,13 +9699,18 @@ countSpan.textContent = '(Mains: ' + commonsMain.length + ', Extra: ' + commonsE
         });
       }
 
-      // Strict overlaps (everyone agrees)
-      applyOverlapHighlight(commonsMain, false);
-      applyOverlapHighlight(commonsExtra, true);
+      // Only apply overlap highlights when 2+ methods are compared.
+      // With a single selection there is no real overlap — leave the natural
+      // hit (match-pill green) / miss (no-match gray) colouring intact.
+      if (checked.length >= 2) {
+        // Strict overlaps (everyone agrees)
+        applyOverlapHighlight(commonsMain, false);
+        applyOverlapHighlight(commonsExtra, true);
 
-      // Soft overlaps (2+ voices) — this is what was missing
-      applyOverlapHighlight(softMain, false);
-      applyOverlapHighlight(softExtra, true);
+        // Soft overlaps (2+ voices)
+        applyOverlapHighlight(softMain, false);
+        applyOverlapHighlight(softExtra, true);
+      }
 
       // ─────────────────────────────────────────────────────────
       // Dynamic Narrative based on CURRENT selection (mode-aware)
