@@ -1847,7 +1847,7 @@ unset($__cLsData, $__cRuns, $__cSrcStats, $__cTopNums, $__cNumFreq, $__cNumHits,
 ?>
 
 <!-- ==================================================
-     CSS Styles (Sorcerer [[style]] block)   'lottery_id
+     CSS Styles (Sorcerer [style] block)   'lottery_id
      ================================================== -->
 [[style]]
 /* ----------------------------------------------------------------------
@@ -2012,7 +2012,7 @@ h3.title { font-size: 1.5rem; }
     font-size:1.5rem;
   }
   .hero-subtitle{
-    font-size;.92rem;
+    font-size:.92rem;
   }
 }
 
@@ -2526,7 +2526,7 @@ h3.title { font-size: 1.5rem; }
   outline-offset:2px;
 }
 
-[[style]]
+
 /* Give the legend card more breathing room */
 .legend-card{
   padding:0.75rem 1.25rem 0.75rem;   /* top / sides / bottom */
@@ -2570,7 +2570,7 @@ h3.title { font-size: 1.5rem; }
 .legend-card .legend-box.legend-mcmc::before{   background-color:#a855f7; } /* purple */
 .legend-card .legend-box.legend-heatmap::before{background-color:#f97316; } /* orange */
 
-[[/style]]
+
 
 
 
@@ -8848,7 +8848,7 @@ if (!empty($settingLabels)) {
 [[form method="post" style="margin-top:0.75rem;"]]
   <?php echo \Joomla\CMS\HTML\HTMLHelper::_('form.token'); ?>
   [[input type="hidden" name="save_setting_template" value="1"]]
-  [[input type="hidden" name="source"              value="<?php echo $s->source; ?>"]]
+  [[input type="hidden" name="source"              value="<?php echo htmlspecialchars((string)$s->source, ENT_QUOTES, 'UTF-8'); ?>"]]
   [[input type="hidden" name="lottery_id"          value="<?php echo (int)$s->lottery_id; ?>"]]
 
 <?php foreach (array_keys($settingLabels) as $prop): ?>
@@ -10734,7 +10734,7 @@ if (nextSteps && nextSteps.length) {
   html += '\u003cdiv class="bullet"\u003e\u003cem\u003eNo changes suggested right now \u2014 this is a reasonable baseline.\u003c/em\u003e\u003c/div\u003e';
 }
 
-// Render structured narrative (Sorcerer [[..]] -> HTML)
+// Render structured narrative (Sorcerer [..] -> HTML)
 // Also mark it as a live status region for assistive tech.
 if (narrativeEl) {
   narrativeEl.setAttribute('role', 'status');
@@ -11375,8 +11375,8 @@ initLotteryCollapse();
             [[/div]]
 
             [[div class="draw-info"]]
-              Last Draw: [[strong]]<?php echo ($lastDraw ?? ''); ?>[[/strong]][[br]]
-              Next Draw: [[strong]]<?php echo ($nextDraw ?? ''); ?>[[/strong]][[br]]
+              Last Draw: [[strong]]<?php echo htmlspecialchars($lastDraw ?? '', ENT_QUOTES, 'UTF-8'); ?>[[/strong]][[br]]
+              Next Draw: [[strong]]<?php echo htmlspecialchars($nextDraw ?? '', ENT_QUOTES, 'UTF-8'); ?>[[/strong]][[br]]
               Numbers: [[strong]]<?php echo htmlspecialchars($drawnStr, ENT_QUOTES, 'UTF-8'); ?>[[/strong]]
             [[/div]]
 
@@ -11439,7 +11439,7 @@ initLotteryCollapse();
   <?php endif; ?>
 [[/details]]
 
-[[/div]]
+
 [[script]]
   function scrollToFavorites() {
     var el = document.getElementById('favorite-lotteries');
@@ -11920,7 +11920,7 @@ function skaiLraToggle(sectionId) {
 // ES5-compatible; no external dependencies.
 // ============================================================
 
-// Joomla's text filter strips HTML tags from [[script]] content before the
+// Joomla's text filter strips HTML tags from [script-block] content before the
 // JavaScript reaches the browser.  Writing < and > as their Unicode escapes
 // (\u003c / \u003e) prevents the filter from recognising them as HTML while
 // still producing the correct characters at JavaScript runtime.
@@ -12008,7 +12008,7 @@ function _mleOpenPrintWindow(cards, triggerEl, groupEl) {
   // The style-tag block is the ONLY stylesheet in the popup window --
   // no Joomla CSS, no Bootstrap, no theme overrides.
   // NOTE: _LT/_GT replace literal < > in HTML strings so Joomla's text filter
-  // (which runs on [[script]] content) cannot strip HTML tags from these literals.
+  // (which runs on [script-block] content) cannot strip HTML tags from these literals.
    // -- Assemble a complete standalone HTML document --
   // FIX: Use array join so no string literal can ever span lines (ES5-safe).
   var __p = [];
